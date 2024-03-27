@@ -1,0 +1,29 @@
+#include <iostream>
+#include <string>
+
+class Book; // Forward declaration
+
+class Student {
+public:
+    std::string studentName;
+    std::string regNum;
+    Book* borrowedBooks[3]; // Array of pointers to Book objects
+    int booksCount;
+
+    Student() : booksCount(0) {
+        std::cout << "Enter Student Name: ";
+        std::getline(std::cin, studentName);
+
+        std::cout << "Enter Registration Number: ";
+        std::getline(std::cin, regNum);
+    }
+};
+
+class Book {
+public:
+    int sNo;
+    std::string bookName;
+    std::string authorName;
+    int bookQty;
+    int bookQtyCopy;
+};
