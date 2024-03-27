@@ -1,0 +1,78 @@
+#include <iostream>
+#include "Books.h" // Assuming you have a header file Books.h for the Books class
+#include "Students.h" // Assuming you have a header file Students.h for the Students class
+
+int main() {
+    // Displaying menu
+    std::cout << "********************Welcome to the GFG Library!********************\n";
+    std::cout << "                 Select From The Following Options:               \n";
+    std::cout << "**********************************************************************\n";
+
+    // Creating objects of Books and Students classes
+    Books ob;
+    Students obStudent;
+
+    int choice;
+    int searchChoice;
+
+    // Creating menu using do-while loop
+    do {
+        ob.dispMenu();
+        std::cin >> choice;
+
+        // Switch case
+        switch (choice) {
+            case 1:
+                {
+                    Book b;
+                    ob.addBook(b);
+                    break;
+                }
+            case 2:
+                ob.upgradeBookQty();
+                break;
+            case 3:
+                std::cout << "Press 1 to Search with Book Serial No.\n";
+                std::cout << "Press 2 to Search with Book's Author Name.\n";
+                std::cin >> searchChoice;
+
+                // Nested switch
+                switch (searchChoice) {
+                    case 1:
+                        ob.searchBySno();
+                        break;
+                    case 2:
+                        ob.searchByAuthorName();
+                        break;
+                    default:
+                        std::cout << "Invalid choice for search.\n";
+                }
+                break;
+            case 4:
+                ob.showAllBooks();
+                break;
+            case 5:
+                {
+                    Student s;
+                    obStudent.addStudent(s);
+                    break;
+                }
+            case 6:
+                obStudent.showAllStudents();
+                break;
+            case 7:
+                obStudent.checkOutBook(ob);
+                break;
+            case 8:
+                obStudent.checkInBook(ob);
+                break;
+            case 0:
+                std::cout << "Exiting the program.\n";
+                break;
+            default:
+                std::cout << "Invalid choice. Enter between 0 to 8.\n";
+        }
+    } while (choice != 0);
+
+    return 0;
+}
