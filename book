@@ -1,0 +1,32 @@
+#include <iostream>
+#include <string>
+
+// Class
+class Book {
+public:
+    // Class data members
+    int sNo;
+    std::string bookName;
+    std::string authorName;
+    int bookQty;
+    int bookQtyCopy;
+
+    // Constructor
+    Book() {
+        // Display message for taking input later
+        // taking input via standard input
+        std::cout << "Enter Serial No of Book: ";
+        std::cin >> sNo;
+        std::cin.ignore(); // Ignore the newline character left by previous input
+
+        std::cout << "Enter Book Name: ";
+        std::getline(std::cin, bookName);
+
+        std::cout << "Enter Author Name: ";
+        std::getline(std::cin, authorName);
+
+        std::cout << "Enter Quantity of Books: ";
+        std::cin >> bookQty;
+        bookQtyCopy = bookQty;
+    }
+};
