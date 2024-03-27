@@ -1,0 +1,178 @@
+#include <iostream>
+#include <string>
+
+class Book {
+public:
+    int sNo;
+    std::string bookName;
+    std::string authorName;
+    int bookQty;
+    int bookQtyCopy;
+};
+
+class Books {
+private:
+    Book theBooks[50];
+    int count;
+    std::string input;
+
+public:
+    Books() : count(0) {}
+
+    int compareBookObjects(const Book& b1, const Book& b2) {
+        if (b1.bookName == b2.bookName) {
+            std::cout << "Book of this Name Already Exists." << std::endl;
+            return 0;
+        }
+
+        if (b1.sNo == b2.sNo) {
+            std::cout << "Book of this Serial No Already Exists." << std::endl;
+            return 0;
+        }
+        return 1;
+    }
+
+    void addBook(const Book& b) {
+        for (int i = 0; i < count; ++i) {
+            if (compareBookObjects(b, theBooks[i]) == 0)
+                return;
+        }
+
+        if (count < 50) {
+            theBooks[count] = b;
+            count++;
+        } else {
+            std::cout << "No Space to Add More Books." << std::endl;
+        }
+    }
+
+    void searchBySno() {
+        int sNo;
+        std::cout << "\t\t\t\tSEARCH BY SERIAL NUMBER\n";
+        std::cout << "Enter Serial No of Book: ";
+        std::cin >> sNo;
+
+        int flag = 0;
+        std::cout << "S.No\t\tName\t\tAuthor\t\tAvailable Qty\t\tTotal Qty\n";
+        for (int i = 0; i < count; ++i) {
+            if (sNo == theBooks[i].sNo) {
+                std::cout << theBooks[i].sNo << "\t\t" << theBooks[i].bookName << "\t\t"
+                          << theBooks[i].authorName << "\t\t" << theBooks[i].bookQtyCopy << "\t\t"
+                          << theBooks[i].bookQty << std::endl;
+                flag++;
+                return;
+            }
+        }
+        if (flag == 0)
+            std::cout << "No Book for Serial No " << sNo << " Found." << std::endl;
+    }
+
+    void searchByAuthorName() {
+        std::string authorName;
+        std::cout << "\t\t\t\tSEARCH BY AUTHOR'S NAME\n";
+        std::cin.ignore(); // Clear newline character from the buffer
+        std::cout << "Enter Author Name: ";
+        std::getline(std::cin, authorName);
+
+        int flag = 0;
+        std::cout << "S.No\t\tName\t\tAuthor\t\tAvailable Qty\t\tTotal Qty\n";
+        for (int i = 0; i < count; ++i) {
+            if (authorName == theBooks[i].authorName) {
+                std::cout << theBooks[i].sNo << "\t\t" << theBooks[i].bookName << "\t\t"
+                          << theBooks[i].authorName << "\t\t" << theBooks[i].bookQtyCopy << "\t\t"
+                          << theBooks[i].bookQty << std::endl;
+                flag++;
+            }
+        }
+        if (flag == 0)
+            std::cout << "No Books of " << authorName << " Found." << std::endl;
+    }
+
+    void showAllBooks() {
+        std::cout << "\t\t\t\tSHOWING ALL BOOKS\n";
+        std::cout << "S.No\t\tName\t\tAuthor\t\tAvailable Qty\t\tTotal Qty\n";
+        for (int i = 0; i < count; ++i) {
+            std::cout << theBooks[i].sNo << "\t\t" << theBooks[i].bookName << "\t\t"
+                      << theBooks[i].authorName << "\t\t" << theBooks[i].bookQtyCopy << "\t\t"
+                      << theBooks[i].bookQty << std::endl;
+        }
+    }
+
+    void upgradeBookQty() {
+        std::cout << "\t\t\t\tUPGRADE QUANTITY OF A BOOK\n";
+        std::cout << "Enter Serial No of Book: ";
+        int sNo;
+        std::cin >> sNo;
+
+        for (int i = 0; i < count; ++i) {
+            if (sNo == theBooks[i].sNo) {
+                std::cout << "Enter No of Books to be Added: ";
+                int addingQty;
+                std::cin >> addingQty;
+                theBooks[i].bookQty += addingQty;
+                theBooks[i].bookQtyCopy += addingQty;
+                return;
+            }
+        }
+    }
+
+    void dispMenu() {
+        std::cout << "----------------------------------------------------------------------------------------------------------\n";
+        std::cout << "Press 1 to Add new Book.\n";
+        std::cout << "Press 0 to Exit Application.\n";
+        std::cout << "Press 2 to Upgrade Quantity of a Book.\n";
+        std::cout << "Press 3 to Search a Book.\n";
+        std::cout << "Press 4 to Show All Books.\n";
+        std::cout << "Press 5 to Register Student.\n";
+        std::cout << "Press 6 to Show All Registered Students.\n";
+        std::cout << "Press 7 to Check Out Book.\n";
+        std::cout << "Press 8 to Check In Book.\n";
+        std::cout << "-------------------------------------------------------------------------------------------------------\n";
+    }
+
+    int isAvailable(int sNo) {
+        for (int i = 0; i < count; ++i) {
+            if (sNo == theBooks[i].sNo) {
+                if (theBooks[i].bookQtyCopy > 0) {
+                    std::cout << "Book is Available." << std::endl;
+                    return i;
+                }
+                std::cout << "Book is Unavailable." << std::endl;
+                return -1;
+            }
+        }
+        std::cout << "No Book of Serial Number Available in Library." << std::endl;
+        return -1;
+    }
+
+    Book checkOutBook() {
+        std::cout << "Enter Serial No of Book to be Checked Out: ";
+        int sNo;
+        std::cin >> sNo;
+
+        int bookIndex = isAvailable(sNo);
+        if (bookIndex != -1) {
+            theBooks[bookIndex].bookQtyCopy--;
+            return theBooks[bookIndex];
+        }
+        return Book(); // Return default-constructed Book object if book not found
+    }
+
+    void checkInBook(const Book& b) {
+        for (int i = 0; i < count; ++i) {
+            if (b.sNo == theBooks[i].sNo) {
+                theBooks[i].bookQtyCopy++;
+                return;
+            }
+        }
+    }
+};
+
+int main() {
+    Books library;
+    int choice;
+    do {
+        library.dispMenu();
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+        switch (choice) {
