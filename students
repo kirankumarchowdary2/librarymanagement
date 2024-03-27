@@ -1,0 +1,120 @@
+#include <iostream>
+#include <string>
+
+class Book; // Forward declaration
+
+class Student {
+public:
+    std::string studentName;
+    std::string regNum;
+    Book* borrowedBooks[3];
+    int booksCount;
+
+    Student() : booksCount(0) {
+        std::cout << "Enter Student Name: ";
+        std::getline(std::cin, studentName);
+
+        std::cout << "Enter Registration Number: ";
+        std::getline(std::cin, regNum);
+    }
+};
+
+class Books {
+public:
+    int sNo;
+    std::string bookName;
+    std::string authorName;
+    int bookQty;
+    int bookQtyCopy;
+};
+
+class Students {
+private:
+    Student theStudents[50];
+    int count;
+    std::string input;
+
+public:
+    Students() : count(0) {}
+
+    void addStudent(const Student& s) {
+        for (int i = 0; i < count; ++i) {
+            if (s.regNum == theStudents[i].regNum) {
+                std::cout << "Student of Reg Num " << s.regNum << " is Already Registered." << std::endl;
+                return;
+            }
+        }
+
+        if (count < 50) {
+            theStudents[count] = s;
+            count++;
+        }
+    }
+
+    void showAllStudents() {
+        std::cout << "Student Name\t\tReg Number\n";
+        for (int i = 0; i < count; ++i) {
+            std::cout << theStudents[i].studentName << "\t\t" << theStudents[i].regNum << std::endl;
+        }
+    }
+
+    int isStudent() {
+        std::cout << "Enter Reg Number: ";
+        std::getline(std::cin, input);
+
+        for (int i = 0; i < count; ++i) {
+            if (theStudents[i].regNum == input) {
+                return i;
+            }
+        }
+
+        std::cout << "Student is not Registered. Get Registered First." << std::endl;
+        return -1;
+    }
+
+    void checkOutBook(Books& book) {
+        int studentIndex = isStudent();
+        if (studentIndex != -1) {
+            std::cout << "Checking out" << std::endl;
+
+            // Assume method showAllBooks() and checkOutBook() exist in Books class
+            // book.showAllBooks();
+            // Book b = book.checkOutBook();
+
+            if (b != null) {
+                if (theStudents[studentIndex].booksCount <= 3) {
+                    std::cout << "Adding book" << std::endl;
+                    theStudents[studentIndex].borrowedBooks[theStudents[studentIndex].booksCount] = &b;
+                    theStudents[studentIndex].booksCount++;
+                    return;
+                } else {
+                    std::cout << "Student Can not Borrow more than 3 Books." << std::endl;
+                    return;
+                }
+            }
+            std::cout << "Book is not Available." << std::endl;
+        }
+    }
+
+    void checkInBook(Books& book) {
+        int studentIndex = isStudent();
+        if (studentIndex != -1) {
+            std::cout << "S.No\t\t\tBook Name\t\t\tAuthor Name" << std::endl;
+            Student& s = theStudents[studentIndex];
+            for (int i = 0; i < s.booksCount; ++i) {
+                std::cout << s.borrowedBooks[i]->sNo << "\t\t\t" << s.borrowedBooks[i]->bookName << "\t\t\t"
+                          << s.borrowedBooks[i]->authorName << std::endl;
+            }
+            std::cout << "Enter Serial Number of Book to be Checked In: ";
+            std::cin >> input;
+            for (int i = 0; i < s.booksCount; ++i) {
+                if (input == s.borrowedBooks[i]->sNo) {
+                    book.checkInBook(*s.borrowedBooks[i]);
+                    s.borrowedBooks[i] = nullptr;
+                    return;
+                }
+            }
+            std::cout << "Book of Serial No " << input << " not Found" << std::endl;
+        }
+    }
+};
